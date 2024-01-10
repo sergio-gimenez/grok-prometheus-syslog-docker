@@ -1,0 +1,19 @@
+global:
+    config_version: 2
+input:
+    type: file
+    path: /opt/example/examples.log
+    readall: true
+grok:
+    patterns_dir: ./patterns
+metrics:
+    - type: counter
+      name: syslog_lines_total
+      help: Counter metric for syslog lines with labels.
+      match: '%{SYSLOG5424LINE:syslog5424_msg}'
+      labels:
+          host: '{{.syslog5424_host}}'
+          app: '{{.syslog5424_app}}'
+          proc: '{{.syslog5424_proc}}'
+server:
+    port: 9144
